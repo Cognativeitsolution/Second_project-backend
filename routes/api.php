@@ -9,6 +9,7 @@ use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\API\AnnouncementController;
 use App\Http\Controllers\API\ForgotPasswordController;
+use App\Http\Controllers\API\AdminDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ Route::middleware(['auth:sanctum', 'auth'])->group( function () {
     Route::get('/companies', [RegisterController::class, 'getCompanies']);
 
     Route::get('generate-pdf', [PDFController::class, 'generatePDF']); // Generate PDF Report
+    Route::get('getRecentAgencies', [AdminDashboardController::class, 'getRecentAgencies']); // Get Recent Agencies
 
 });
 
