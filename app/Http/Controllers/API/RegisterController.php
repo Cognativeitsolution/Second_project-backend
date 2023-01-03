@@ -14,7 +14,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Jobs\SendEmailJob;
 use Illuminate\Support\Str;
 
@@ -32,8 +32,8 @@ class RegisterController extends BaseController
             'name' => 'required|max:80',
             'email' => 'required|email|unique:users,email',
             'contact' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'password' => 'required',
-            'c_password' => 'required|same:password',
+            'password' => 'required|min:6|max:15',
+            'c_password' => 'required|same:password|min:6|max:15',
             'sin_number' => 'required|max:15',
         ]);
    
@@ -112,14 +112,14 @@ class RegisterController extends BaseController
         // Change to Normal Email
 
         // Mail is working when goto live please remove commit
-        /*
+        
         Mail::send('emails.account_verify', $details, function($message) use ($user) {
             $message->to($user["email"] , $user["name"])
                 ->subject('Employment Agency Tool - Please Verify Email Address');
         });
-        */
+
         Logs::add_log(User::getTableName(), $user->id, $input, 'add', '');
-        return $this->sendResponse($success, 'Welcome, You are register successfully, please check your email for verify your account.');
+        return $this->sendResponse($success, 'Welcome, You are registered successfully, please check your email to verify your account.');
 
     }
 

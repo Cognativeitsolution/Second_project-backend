@@ -25,7 +25,7 @@ class PDFController extends BaseController
         $combinedDT = date('d-m-Y-H:i:s');
 
         $data = [
-            'title' => 'Welcome to Employment Agencty',
+            'title' => 'Welcome to Employment Agency',
             'date' => date('m/d/Y'),
             'users' => $users
         ];

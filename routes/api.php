@@ -3,11 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\API\RegisterController;
-use App\Http\Controllers\API\ProductController;
-use App\Http\Controllers\API\RoleController;
-use App\Http\Controllers\API\AnnouncementController;
 use App\Http\Controllers\API\PDFController;
+use App\Http\Controllers\API\RoleController;
+use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\API\AnnouncementController;
+use App\Http\Controllers\API\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,8 @@ Route::controller(RegisterController::class)->group(function(){
 
 Route::get('/users-export', [PDFController::class, 'export']);
 Route::post('/users-import', [PDFController::class, 'import']);
+Route::post('/email-check-record', [ForgotPasswordController::class, 'checkEmail']);
+Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword']);
 
 
 
