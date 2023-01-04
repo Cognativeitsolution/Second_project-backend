@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->tinyInteger('status')->default(1); // If admin want to inactive this account ?? 0
             $table->string('verify_code')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('contact', 25)->nullable();
             $table->string('sin_number', 25)->nullable();
             $table->tinyInteger('is_super_admin')->default(0)->index(); // Super Admin

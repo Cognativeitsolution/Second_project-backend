@@ -58,4 +58,8 @@ class User extends Authenticatable
         return with(new static)->getTable();
     }
 
+    public function providers()
+    {
+        return $this->hasMany(Provider::class,'user_id','id');
+    }
 }

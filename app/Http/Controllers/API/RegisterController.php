@@ -151,7 +151,7 @@ class RegisterController extends BaseController
             ];
         }
 
-        // Check if user emai is not verified
+        // Check if user email is not verified
         if ($user->email_verified_at === null) {
 
             $verify_code = random_int(10000, 99999);
