@@ -36,6 +36,8 @@ Route::middleware(['auth:sanctum', 'auth'])->group( function () {
     Route::get('generate-pdf', [PDFController::class, 'generatePDF']); // Generate PDF Report
     Route::get('getRecentAgencies', [AdminDashboardController::class, 'getRecentAgencies']); // Get Recent Agencies
 
+    Route::get('/get-recent-activites', [AdminDashboardController::class, 'getRecentActivities']);
+
 });
 
 Route::controller(RegisterController::class)->group(function(){
