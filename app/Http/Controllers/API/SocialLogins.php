@@ -13,6 +13,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Spatie\Permission\Models\Permission;
 use GuzzleHttp\Exception\ClientException;
 
+
 class SocialLogins extends Controller
 {
     /**

@@ -29,6 +29,7 @@ class User extends Authenticatable
         'sin_number',
         'verify_code',
         'email_verified_at',
+        'status',
         'is_agency',
         'is_company',
         'is_worker'

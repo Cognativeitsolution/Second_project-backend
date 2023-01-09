@@ -351,6 +351,31 @@ class RegisterController extends BaseController
 
     }
 
+    public function changeStatus(Request $request){
+        $uuid = $request->input('uuid');
+
+        $uuid_record = User::where('uuid', $uuid)->select('id','uuid','status')->first();
+
+        if( $uuid_record == false){
+            return $this->sendError('Record not found or something went wrong.');
+        }
+
+        if($uuid_record->status == 1){
+            $status = 0 ;
+            $message = "Record Block successfully.";
+        }else{
+            $status = 1 ;
+            $message = "Record Active successfully.";
+        }
+
+        $uuid_record->update(['status' => $status]);
+        $data = User::where('uuid', $uuid)->first();
+        $data['message'] = $message;
+
+        Logs::add_log(User::getTableName(), Auth::user()->id, $data, 'edit', '');
+        return $this->sendResponse($data, $message);
+    }
+
 
 
 
