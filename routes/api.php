@@ -3,13 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\API\SocialLogins;
 use App\Http\Controllers\API\PDFController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\API\AnnouncementController;
-use App\Http\Controllers\API\ForgotPasswordController;
 use App\Http\Controllers\API\AdminDashboardController;
+use App\Http\Controllers\API\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,8 @@ Route::middleware(['auth:sanctum', 'auth'])->group( function () {
     Route::get('generate-pdf', [PDFController::class, 'generatePDF']); // Generate PDF Report
     Route::get('getRecentAgencies', [AdminDashboardController::class, 'getRecentAgencies']); // Get Recent Agencies
 
+    Route::get('/get-recent-activites', [AdminDashboardController::class, 'getRecentActivities']);
+
 });
 
 Route::controller(RegisterController::class)->group(function(){
@@ -44,6 +47,13 @@ Route::controller(RegisterController::class)->group(function(){
     Route::post('login', 'login');
     Route::post('/destroy', 'destroy');
     Route::post('/verify-email', 'verify_email');
+
+});
+
+Route::controller(SocialLogins::class)->group(function() {
+
+    Route::get('/login/{provider}', 'redirectToProvider');
+    Route::get('/login/{provider}/callback', 'handleProviderCallback');
 
 });
 
