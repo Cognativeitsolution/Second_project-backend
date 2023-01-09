@@ -223,7 +223,9 @@ class RoleController extends BaseController
         DB::table("roles")->where('id',$uuid_record->id)->delete();
 
         $data['success'] = true;
-        return $this->sendResponse($data, 'Role and permissions update successfully.');
+
+        Logs::add_log(Role::getTableName(), Auth::user()->id, $uuid_record, 'delete', '');
+        return $this->sendResponse($data, 'Role deleted successfully.');
 
     }
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Announcement;
 use App\Models\Logs;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController;
 use Validator;
@@ -94,10 +95,13 @@ class AnnouncementController extends BaseController
      */
     public function destroy(Announcement $announcement)
     {
+
         $announcement = Announcement::find($announcement->id);
 
         $announcement->delete();
         $data = Announcement::select('id','detail')->orderBy('id', 'DESC')->get();
+
+        Logs::add_log(Announcement::getTableName(), Auth::user()->id, $announcement, 'delete', '');
         return $this->sendResponse($data, 'Record has been deleted successfully.');
     }
 }

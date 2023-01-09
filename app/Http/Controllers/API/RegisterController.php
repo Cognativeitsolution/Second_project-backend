@@ -343,6 +343,14 @@ class RegisterController extends BaseController
         return $this->sendResponse($data, 'Record retrieved successfully.');
     }
 
+    public function deleteAccounts(Request $request){
+
+        $ids = array_map('intval', explode(',', $request->input('ids')));
+        User::whereIn('id', $ids)->delete();
+        return $this->sendResponse("", 'Record deleted successfully.');
+
+    }
+
 
 
 

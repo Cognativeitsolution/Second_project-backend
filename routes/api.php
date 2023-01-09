@@ -31,6 +31,7 @@ Route::middleware(['auth:sanctum', 'auth'])->group( function () {
     Route::get('/user/remove/{uuid}', [RegisterController::class, 'user_remove']); // for Remove users
     Route::get('/agencies', [RegisterController::class, 'getAgencies']);
     Route::get('/companies', [RegisterController::class, 'getCompanies']);
+    Route::post('/delete-accounts', [RegisterController::class, 'deleteAccounts']); // POST ids array
 
     Route::get('generate-pdf', [PDFController::class, 'generatePDF']); // Generate PDF Report
     Route::get('getRecentAgencies', [AdminDashboardController::class, 'getRecentAgencies']); // Get Recent Agencies
