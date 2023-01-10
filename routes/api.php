@@ -8,6 +8,7 @@ use App\Http\Controllers\API\PDFController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\Api\UserUpdateController;
 use App\Http\Controllers\API\AnnouncementController;
 use App\Http\Controllers\API\AdminDashboardController;
 use App\Http\Controllers\API\ForgotPasswordController;
@@ -30,6 +31,8 @@ Route::middleware(['auth:sanctum', 'auth'])->group( function () {
     Route::resource('roles', RoleController::class);
     Route::resource('announcements', AnnouncementController::class);
     Route::get('/user/remove/{uuid}', [RegisterController::class, 'user_remove']); // for Remove users
+    Route::get('/user/edit/{uuid}', [UserUpdateController::class, 'user_edit']);
+    Route::put('/user/update/{user:uuid}', [UserUpdateController::class, 'user_update']);
     Route::get('/agencies', [RegisterController::class, 'getAgencies']);
     Route::get('/companies', [RegisterController::class, 'getCompanies']);
     Route::post('/delete-accounts', [RegisterController::class, 'deleteAccounts']); // POST ids array

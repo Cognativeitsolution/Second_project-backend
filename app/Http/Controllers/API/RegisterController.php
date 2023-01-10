@@ -375,8 +375,4 @@ class RegisterController extends BaseController
         Logs::add_log(User::getTableName(), Auth::user()->id, $data, 'edit', '');
         return $this->sendResponse($data, $message);
     }
-
-
-
-
 }
