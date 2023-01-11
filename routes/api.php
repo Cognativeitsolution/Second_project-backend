@@ -8,7 +8,7 @@ use App\Http\Controllers\API\PDFController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\RegisterController;
-use App\Http\Controllers\Api\UserUpdateController;
+use App\Http\Controllers\API\UserUpdateController;
 use App\Http\Controllers\API\AnnouncementController;
 use App\Http\Controllers\API\AdminDashboardController;
 use App\Http\Controllers\API\ForgotPasswordController;
