@@ -136,6 +136,16 @@ class RegisterController extends BaseController
             'password' => 'required|string|min:6'
         ]);
 
+        // New Code for Live Check Active ?? Block Status ...
+        $user_exists_and_inactive = User::where('email', $details['email'])
+            ->select('id','status')
+            ->where('status', 0)
+            ->first();
+
+        if( $user_exists_and_inactive == true){
+            return $this->sendError('Your account is block by Super Admin.');
+        }
+
         // Check user email exists ?? or not
         $user = User::select(
             'id',
@@ -256,7 +266,7 @@ class RegisterController extends BaseController
                 'name',
                 'email',
                 'contact',
-                'sin_number',
+                //'sin_number',
                 'is_agency'
             )
                 ->where('users.is_agency', 1)
@@ -274,7 +284,7 @@ class RegisterController extends BaseController
                 'name',
                 'email',
                 'contact',
-                'sin_number',
+                //'sin_number',
                 'is_agency'
             )
                 ->where('users.is_agency', 1)
@@ -285,10 +295,10 @@ class RegisterController extends BaseController
         foreach($data as $key => $value){
             $data[$key]['personal_email'] = $this->obfuscate_email($value->email);
             $data[$key]['personal_contact'] = Str::mask($value->contact, '*', 4, 5);
-            $data[$key]['personal_sin_number'] = Str::mask($value->sin_number, '*', 4, 5);
+            //$data[$key]['personal_sin_number'] = Str::mask($value->sin_number, '*', 4, 5);
             unset( $data[$key]->email );
             unset( $data[$key]->contact );
-            unset( $data[$key]->sin_number );
+            //unset( $data[$key]->sin_number );
         }
 
         return $this->sendResponse($data, 'Record retrieved successfully.');
@@ -304,7 +314,7 @@ class RegisterController extends BaseController
                 'name',
                 'email',
                 'contact',
-                'sin_number',
+                //'sin_number',
                 'is_company'
             )
                 ->where('users.is_company', 1)
@@ -322,7 +332,7 @@ class RegisterController extends BaseController
                 'name',
                 'email',
                 'contact',
-                'sin_number',
+                //'sin_number',
                 'is_company'
             )
             ->where('users.is_company', 1)
@@ -333,10 +343,10 @@ class RegisterController extends BaseController
         foreach($data as $key => $value){
             $data[$key]['personal_email'] = $this->obfuscate_email($value->email);
             $data[$key]['personal_contact'] = Str::mask($value->contact, '*', 4, 5);
-            $data[$key]['personal_sin_number'] = Str::mask($value->sin_number, '*', 4, 5);
+            //$data[$key]['personal_sin_number'] = Str::mask($value->sin_number, '*', 4, 5);
             unset( $data[$key]->email );
             unset( $data[$key]->contact );
-            unset( $data[$key]->sin_number );
+            //unset( $data[$key]->sin_number );
         }
 
 
