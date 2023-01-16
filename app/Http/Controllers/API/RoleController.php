@@ -203,6 +203,7 @@ class RoleController extends BaseController
         $data['role'] = $role;
         $data['given_role_permissions'] = $rolePermissions;
 
+        Logs::add_log("roles", $role->id, $request->all(), 'edit', 1);
         return $this->sendResponse($data, 'Role and permissions update successfully.');
     }
 

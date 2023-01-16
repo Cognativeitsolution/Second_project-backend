@@ -32,7 +32,9 @@ class User extends Authenticatable
         'status',
         'is_agency',
         'is_company',
-        'is_worker'
+        'is_worker',
+        'last_login_at',
+        'last_login_ip'
     ];
 
     /**

@@ -17,7 +17,7 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\SendEmailJob;
 use Illuminate\Support\Str;
-
+use Carbon\Carbon;
 
 class RegisterController extends BaseController
 {
@@ -112,7 +112,7 @@ class RegisterController extends BaseController
         // Change to Normal Email
 
         // Mail is working when goto live please remove commit
-        
+
         Mail::send('emails.account_verify', $details, function($message) use ($user) {
             $message->to($user["email"] , $user["name"])
                 ->subject('Employment Agency Tool - Please Verify Email Address');
@@ -182,6 +182,11 @@ class RegisterController extends BaseController
         }
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+
+            $user->update([
+                'last_login_at' => Carbon::now()->toDateTimeString(),
+                'last_login_ip' => $request->getClientIp()
+            ]);
 
             Logs::add_log(User::getTableName(), Auth::user()->id, $request->all(), 'login', '');
             return new UserResource(Auth::user());

@@ -31,6 +31,9 @@ return new class extends Migration
                 $table->tinyInteger('is_worker')->default(1)->index(); // Company Worker
                     $table->tinyInteger('parent_id')->default(0);
 
+            $table->datetime('last_login_at')->nullable();
+            $table->string('last_login_ip')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
