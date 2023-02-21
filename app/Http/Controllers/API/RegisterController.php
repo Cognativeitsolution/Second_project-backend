@@ -123,6 +123,37 @@ class RegisterController extends BaseController
 
     }
 
+    public function resendCode(Request $request){
+
+        $details = $request->validate([
+            'email' => 'required|string|email'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if( $user == false){
+            return $this->sendError('Email address not found or something went wrong.');
+        }
+
+        $code = random_int(10000, 99999);
+        $input['verify_code'] = $code;
+
+        $details['email'] = $user->email ;
+        $details['verify_code'] = $code;
+
+        // Now send email and update user code
+        $user->update(['verify_code' => $code ]);
+
+        $success['email'] =  $user->email;
+
+        Mail::send('emails.account_verify', $details, function($message) use ($user) {
+            $message->to($user["email"] , $user["name"])
+                ->subject('Employment Agency Tool - Please Verify Email Address');
+        });
+
+        return $this->sendResponse($success, 'Please check your email to verify your account.');
+    }
+
     /**
      * Login api
      *
