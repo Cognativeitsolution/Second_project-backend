@@ -51,6 +51,7 @@ Route::controller(RegisterController::class)->group(function(){
     Route::post('login', 'login');
     Route::post('/destroy', 'destroy');
     Route::post('/verify-email', 'verify_email');
+    Route::post('/resendCode', 'resendCode');
 
 });
 
