@@ -12,6 +12,9 @@ use App\Http\Controllers\API\UserUpdateController;
 use App\Http\Controllers\API\AnnouncementController;
 use App\Http\Controllers\API\AdminDashboardController;
 use App\Http\Controllers\API\ForgotPasswordController;
+use App\Http\Controllers\API\CountriesController;
+use App\Http\Controllers\API\StatesController;
+use App\Http\Controllers\API\CitiesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +46,11 @@ Route::middleware(['auth:sanctum', 'auth'])->group( function () {
 
     Route::get('/get-recent-activites', [AdminDashboardController::class, 'getRecentActivities']);
 
+    Route::resource('/countries', CountriesController::class);
+    Route::resource('/states', StatesController::class);
+    Route::resource('/cities', CitiesController::class);
+
+
 });
 
 Route::controller(RegisterController::class)->group(function(){
@@ -66,6 +74,10 @@ Route::get('/users-export', [PDFController::class, 'export']);
 Route::post('/users-import', [PDFController::class, 'import']);
 Route::post('/email-check-record', [ForgotPasswordController::class, 'checkEmail']);
 Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword']);
+
+Route::get('/show-countries', [CountriesController::class, 'showCountries']);
+Route::get('/states/show-states/{country_id}', [StatesController::class, 'showStates']);
+Route::get('/cities/show-cities/{state_id}', [CitiesController::class, 'showCities']);
 
 
 
