@@ -15,6 +15,7 @@ use App\Http\Controllers\API\ForgotPasswordController;
 use App\Http\Controllers\API\CountriesController;
 use App\Http\Controllers\API\StatesController;
 use App\Http\Controllers\API\CitiesController;
+use App\Http\Controllers\API\SubAgencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +50,7 @@ Route::middleware(['auth:sanctum', 'auth'])->group( function () {
     Route::resource('/countries', CountriesController::class);
     Route::resource('/states', StatesController::class);
     Route::resource('/cities', CitiesController::class);
-
+    Route::resource('/subAgencies', SubAgencyController::class);
 
 });
 

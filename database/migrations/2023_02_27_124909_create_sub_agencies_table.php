@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('sub_agency_name', 100)->nullable();
             $table->string('markup_rate', 20)->nullable();
 
+            $table->unsignedBigInteger('agency_id');
+            $table->foreign('agency_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
             $table->softDeletes();
         });

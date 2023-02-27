@@ -13,19 +13,15 @@ use App\Models\User;
 use App\Models\Logs;
 use Illuminate\Support\Facades\Auth;
 use Validator;
-use App\Http\Resources\UserResource;
 
 use Laravel\Sanctum\PersonalAccessToken;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\SendEmailJob;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 
-class SubAgencyController extends Controller
+class SubAgencyController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +30,8 @@ class SubAgencyController extends Controller
      */
     public function index()
     {
-        //
+        // For testing purpose ...
+        return response()->json( 123 );
     }
 
     /**
@@ -55,7 +52,11 @@ class SubAgencyController extends Controller
      */
     public function store(StoreSubAgencyRequest $request)
     {
-        //
+        $sub_agency = SubAgency::create( $request->all() );
+        Logs::add_log(SubAgency::getTableName(), $sub_agency->id, $request->all() , 'add', '');
+
+        $success['status'] =  true;
+        return $this->sendResponse($success, 'Record has been added.');
     }
 
     /**
@@ -100,6 +101,10 @@ class SubAgencyController extends Controller
      */
     public function destroy(SubAgency $subAgency)
     {
-        //
+        $sub_agency = SubAgency::find($subAgency->id);
+        $sub_agency->delete();
+
+        $success['status'] =  true;
+        return $this->sendResponse($success, 'Record has been deleted.');
     }
 }

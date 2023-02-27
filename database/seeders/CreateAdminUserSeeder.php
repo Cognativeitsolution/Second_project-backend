@@ -23,6 +23,7 @@ class CreateAdminUserSeeder extends Seeder
         $super_admin = User::create([
             'uuid' => rand(10000,9999999),
             'name' => 'Tahseen Super Admin',
+            'email_verified_at' => now(),
             'email' => 'super_admin@admin.com',
             'contact' => '+92300-3111113',
             'sin_number' => '+92300-3111117',
@@ -47,8 +48,9 @@ class CreateAdminUserSeeder extends Seeder
 
         $agency_admin = User::create([
             'uuid' => rand(10000,9999999),
-            'name' => 'Folio LLC',
+            'name' => 'Folio 3 LLC',
             'email' => 'admin@admin.com',
+            'email_verified_at' => now(),
             'contact' => '+92300-3111115',
             'sin_number' => '+92300-3111997',
             'password' => bcrypt('123456'),
@@ -75,6 +77,7 @@ class CreateAdminUserSeeder extends Seeder
             'uuid' => rand(10000,9999999),
             'name' => 'Systems LTD',
             'email' => 'admin2@admin.com',
+            'email_verified_at' => now(),
             'contact' => '+92300-3111119',
             'sin_number' => '+92300-3111333',
             'password' => bcrypt('123456'),
