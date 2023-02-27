@@ -26,6 +26,7 @@ class UpdateSubAgencyRequest extends FormRequest
         return [
             'sub_agency_name' => 'required|string|min:3|max:100',
             'markup_rate' => 'required|string|min:1|max:20',
+            'agency_id' => 'required',
         ];
     }
 }
