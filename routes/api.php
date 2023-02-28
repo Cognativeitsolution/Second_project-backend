@@ -73,19 +73,19 @@ Route::controller(SocialLogins::class)->group(function() {
 
 Route::get('/users-export', [PDFController::class, 'export']);
 Route::post('/users-import', [PDFController::class, 'import']);
-Route::post('/email-check-record', [ForgotPasswordController::class, 'checkEmail']);
-Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword']);
+Route::post('/forgot-password', [ForgotPasswordController::class, 'checkEmail']);
+Route::post('/reset-password', [ForgotPasswordController::class, 'forgotPassword']);
 
 Route::get('/show-countries', [CountriesController::class, 'showCountries']);
 Route::get('/states/show-states/{country_id}', [StatesController::class, 'showStates']);
 Route::get('/cities/show-cities/{state_id}', [CitiesController::class, 'showCities']);
 
-Route::controller(ForgotPasswordController::class)->group(function() {
-
-    Route::post('/forgot-password', 'checkEmail');
-    Route::post('/reset-password', 'forgotPassword');
-
-});
+//Route::controller(ForgotPasswordController::class)->group(function() {
+//
+//    Route::post('/forgot-password', 'checkEmail');
+//    Route::post('/reset-password', 'forgotPassword');
+//
+//});
 
 
 
