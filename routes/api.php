@@ -80,6 +80,13 @@ Route::get('/show-countries', [CountriesController::class, 'showCountries']);
 Route::get('/states/show-states/{country_id}', [StatesController::class, 'showStates']);
 Route::get('/cities/show-cities/{state_id}', [CitiesController::class, 'showCities']);
 
+Route::controller(ForgotPasswordController::class)->group(function() {
+
+    Route::post('/forgot-password', 'checkEmail');
+    Route::post('/reset-password', 'forgotPassword');
+
+});
+
 
 
 
