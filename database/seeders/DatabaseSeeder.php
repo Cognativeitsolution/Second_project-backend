@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AnnouncementSeeder::class);
         $this->call(CountriesSeeder::class);
         $this->call(StatesSeeder::class);
-        //$this->call(CitySeeder::class);
+        $this->call(CitySeeder::class);
         $this->call(SubAgencySeeder::class);
     }
 }
