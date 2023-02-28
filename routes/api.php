@@ -51,12 +51,14 @@ Route::middleware(['auth:sanctum', 'auth'])->group( function () {
     Route::resource('/states', StatesController::class);
     Route::resource('/cities', CitiesController::class);
     Route::resource('/subAgencies', SubAgencyController::class);
+    Route::get('/agencies/subAgencies/{uuid}', [SubAgencyController::class, 'getSubAgencies']);
 
 });
 
 Route::controller(RegisterController::class)->group(function(){
 
     Route::post('register', 'register');
+    Route::post('company-register', 'companyRegister');
     Route::post('login', 'login');
     Route::post('/destroy', 'destroy');
     Route::post('/verify-email', 'verify_email');
@@ -80,12 +82,7 @@ Route::get('/show-countries', [CountriesController::class, 'showCountries']);
 Route::get('/states/show-states/{country_id}', [StatesController::class, 'showStates']);
 Route::get('/cities/show-cities/{state_id}', [CitiesController::class, 'showCities']);
 
-//Route::controller(ForgotPasswordController::class)->group(function() {
-//
-//    Route::post('/forgot-password', 'checkEmail');
-//    Route::post('/reset-password', 'forgotPassword');
-//
-//});
+
 
 
 

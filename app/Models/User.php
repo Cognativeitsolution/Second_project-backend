@@ -34,7 +34,19 @@ class User extends Authenticatable
         'is_company',
         'is_worker',
         'last_login_at',
-        'last_login_ip'
+        'last_login_ip',
+        'mobile_number',
+        'fax',
+        'street_number',
+        'street_name',
+        'unit_no',
+        'country_id',
+        'state_id',
+        'city_id',
+        'postal_code',
+        'contact_person_name',
+        'designation',
+        'cell_number'
     ];
 
     /**

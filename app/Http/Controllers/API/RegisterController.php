@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\API;
-   
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\User;
 use App\Models\Logs;
+use App\Models\AgencyUser;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Http\Resources\UserResource;
@@ -122,6 +123,71 @@ class RegisterController extends BaseController
         return $this->sendResponse($success, 'Welcome, You are registered successfully, please check your email to verify your account.');
 
     }
+
+    // Company Registratin Form
+    public function companyRegister(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|max:80',
+            'email' => 'required|email|unique:users,email',
+            'contact' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'password' => 'required|min:6|max:15',
+            'c_password' => 'required|same:password|min:6|max:15',
+            'sub_agency_ids' => 'required',
+            'rates' => 'required',
+        ]);
+
+        $input = $request->all();
+        $code = random_int(10000, 99999);
+
+        $is_company = 1 ;
+        $is_agency = 0 ;
+        $is_worker = 0 ;
+
+        $input['password'] = bcrypt($input['password']);
+
+        $input['is_agency'] = $is_agency;
+        $input['is_company'] = $is_company;
+        $input['is_worker'] = $is_worker;
+        $input['uuid'] = rand(10000,9999999);
+        $input['email_verified_at'] = now();
+
+        $user = User::create($input);
+
+        $sub_agency_ids = array_map('intval', explode(',', $request->input('sub_agency_ids')));
+        $rates = array_map('intval', explode(',', $request->input('rates')));
+
+        for($i=0; $i < count($sub_agency_ids); $i++){
+            $dataSave = [
+                'user_id'  => $user->id,
+                'sub_agency_id'  => $sub_agency_ids[$i],
+                'rate' => $rates[$i],
+            ];
+            AgencyUser::create($dataSave);
+        }
+
+        $role_admin = Role::create([
+            'name' => 'Company Admin',
+            'admin_id_for_role' => $user->id,
+            'uuid' => rand(10000,9999999)
+        ]);
+
+        $permissions = Permission::whereIn('id',[1,2,3,4,13,14,15,16])
+            ->pluck('id','id')->all(); // this is company admin register permission
+        // Role, and Worker
+
+        $role_admin->syncPermissions($permissions);
+        $user->assignRole([$role_admin->id]);
+
+        //$success['token'] =  $user->createToken('employment')->plainTextToken;
+        $success['name'] =  $user->name;
+        $success['email'] = $user->email ;
+
+        Logs::add_log(User::getTableName(), $user->id, $input, 'add', '');
+        return $this->sendResponse($success, 'Welcome, Company registered successfully');
+
+    }
+
 
     public function resendCode(Request $request){
 

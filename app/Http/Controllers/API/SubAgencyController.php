@@ -107,4 +107,25 @@ class SubAgencyController extends BaseController
         $success['status'] =  true;
         return $this->sendResponse($success, 'Record has been deleted.');
     }
+    // Get Sub Agencies List Depends on UUID
+    public function getSubAgencies($uuid) {
+
+        $user_record = User::select('id','uuid')->where('uuid', $uuid)->first();
+
+        if (is_null($user_record)) {
+            return $this->sendError('Record not found or somthing went wrong.');
+        }
+
+        $details = SubAgency::select('id', 'sub_agency_name as name', 'markup_rate')
+            ->where('agency_id', $user_record['id'])
+            ->get();
+
+        if (!is_null($details)) {
+            return $this->sendResponse($details, 'Records retrieved successfully.');
+        }
+
+        else {
+            return $this->sendError('Record not found or somthing went wrong.');
+        }
+    }
 }

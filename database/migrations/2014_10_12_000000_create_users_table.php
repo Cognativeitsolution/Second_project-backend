@@ -34,6 +34,21 @@ return new class extends Migration
             $table->datetime('last_login_at')->nullable();
             $table->string('last_login_ip')->nullable();
 
+            $table->string('mobile_number', 30)->nullable();
+            $table->string('fax', 30)->nullable();
+            $table->string('street_number', 30)->nullable();
+            $table->string('street_name', 30)->nullable();
+            $table->string('unit_no', 30)->nullable();
+
+            $table->bigInteger('country_id')->nullable();
+            $table->bigInteger('state_id')->nullable();
+            $table->bigInteger('city_id')->nullable();
+
+            $table->string('postal_code', 15)->nullable();
+            $table->string('contact_person_name', 30)->nullable();
+            $table->string('designation', 20)->nullable();
+            $table->string('cell_number', 20)->nullable();
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
