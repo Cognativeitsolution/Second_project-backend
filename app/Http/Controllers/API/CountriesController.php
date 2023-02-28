@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Country;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\BaseController;
 
-class CountriesController extends Controller
+class CountriesController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -15,22 +15,14 @@ class CountriesController extends Controller
      */
     public function index()
     {
-        $countries = Country::select('id', 'name', 'code')->get();
+        $countries = Country::select('id', 'name', 'code', 'status')->orderBy('id', 'DESC')->get();        
 
         if ($countries) {
-            return response()->json([
-                'success' => true,
-                'data' => $countries,
-                'message' => 'Records retrieved successfully!'
-            ]);
+            return $this->sendResponse($countries, 'Records retrieved successfully.');
         }
 
         else {
-            return response()->json([
-                'success' => false,
-                'data' => $countries,
-                'message' => 'Records are not available!'
-            ]);
+            return $this->sendError('Records are not available.');
         }
     }
 
@@ -57,13 +49,11 @@ class CountriesController extends Controller
             'code' => 'required|string|unique:countries,code|min:2|max:5'
         ]);
 
-        $country = Country::create($details);
+        Country::create($details);
 
-        return response()->json([
-            'success' => true,
-            'data' => $country,
-            'message' => 'Record created successfully!'
-        ]);
+        $countries = Country::select('id', 'name', 'code', 'status')->orderBy('id', 'DESC')->get(); 
+
+        return $this->sendResponse($countries, 'Record has been added successfully.');
     }
 
     /**
@@ -74,22 +64,14 @@ class CountriesController extends Controller
      */
     public function show($id)
     {
-        $country = Country::select('id', 'name', 'code')->where('id', $id)->first();
+        $country = Country::select('id', 'name', 'code', 'status')->where('id', $id)->first();
 
         if ($country) {
-            return response()->json([
-                'success' => true,
-                'data' => $country,
-                'message' => 'Record retrieved successfully!'
-            ]);
+            return $this->sendResponse($country, 'Record retrieved successfully.');
         }
 
         else {
-            return response()->json([
-                'success' => false,
-                'data' => $country,
-                'message' => 'Record is not available!'
-            ]);
+            return $this->sendError('Record is not available.');
         }
     }
 
@@ -101,22 +83,14 @@ class CountriesController extends Controller
      */
     public function edit($id)
     {
-        $country = Country::select('id', 'name', 'code')->where('id', $id)->first();
+        $country = Country::select('id', 'name', 'code', 'status')->where('id', $id)->first();
 
         if ($country) {
-            return response()->json([
-                'success' => true,
-                'data' => $country,
-                'message' => 'Record retrieved successfully!'
-            ]);
+            return $this->sendResponse($country, 'Record retrieved successfully.');
         }
 
         else {
-            return response()->json([
-                'success' => false,
-                'data' => $country,
-                'message' => 'Record is not available!'
-            ]);
+            return $this->sendError('Record is not available.');
         }
     }
 
@@ -129,13 +103,10 @@ class CountriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $country = Country::select('id', 'name', 'code')->where('id', $id)->first();
+        $country = Country::select('id', 'name', 'code', 'status')->where('id', $id)->first();
 
         if (!$country) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Record with this id is not available!'
-            ]);
+            return $this->sendError('Record is not available.');
         }
 
         $details = $request->validate([
@@ -145,11 +116,9 @@ class CountriesController extends Controller
 
         $country->update($details);
 
-        return response()->json([
-            'success' => true,
-            'data' => $country,
-            'message' => 'Record updated successfully!'
-        ]);
+        $countries = Country::select('id', 'name', 'code', 'status')->orderBy('id', 'DESC')->get(); 
+
+        return $this->sendResponse($countries, 'Record updated successfully.');
     }
 
     /**
@@ -164,29 +133,20 @@ class CountriesController extends Controller
 
         $country->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Record deleted successfully!'
-        ]);
+        $countries = Country::select('id', 'name', 'code')->get();
+
+        return $this->sendResponse($countries, 'Record deleted successfully.');
     }
 
     public function showCountries() {
         $countries = Country::select('id', 'name', 'code')->get();
 
         if ($countries) {
-            return response()->json([
-                'success' => true,
-                'data' => $countries,
-                'message' => 'Records retrieved successfully!'
-            ]);
+            return $this->sendResponse($countries, 'Records retrieved successfully.');
         }
 
         else {
-            return response()->json([
-                'success' => false,
-                'data' => $countries,
-                'message' => 'Records are not available!'
-            ]);
+            return $this->sendError('Records are not available.');
         }
     }
 
