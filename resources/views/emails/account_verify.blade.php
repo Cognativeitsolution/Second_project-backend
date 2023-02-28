@@ -364,7 +364,7 @@
                 </tr><!-- end tr -->
                 <tr>
                     <td valign="middle" class="hero bg_white" style="padding: 3em 0 2em 0;">
-                        <img src="{{ asset('images/email.png') }}" alt="" style="width: 300px; max-width: 600px; height: auto; margin: auto; display: block;">
+                        <img src="{{ asset('images/email.png') }}" alt="" style="width: 100px; max-width: 600px; height: 100px; margin: auto; display: block;">
                     </td>
                 </tr><!-- end tr -->
                 <tr>
