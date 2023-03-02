@@ -15,7 +15,21 @@ class CountriesController extends BaseController
      */
     public function index()
     {
-        $countries = Country::select('id', 'name', 'code', 'status')->orderBy('id', 'DESC')->get();        
+        $search = request('search');
+
+        if (!empty($search)) {
+            $countries = Country::select('countries.id', 'countries.name', 'countries.code', 'countries.status')
+                ->where('countries.name', 'like', '%'.$search.'%')
+                ->orWhere('countries.code', 'like', '%'.$search.'%')
+                ->orderBy('countries.id','DESC')
+                ->paginate(5);
+        }
+        
+        else {
+            $countries = Country::select('countries.id', 'countries.name', 'countries.code', 'countries.status')
+                            ->orderBy('countries.id', 'DESC')
+                            ->paginate(10);
+        }  
 
         if ($countries) {
             return $this->sendResponse($countries, 'Records retrieved successfully.');
@@ -51,7 +65,7 @@ class CountriesController extends BaseController
 
         Country::create($details);
 
-        $countries = Country::select('id', 'name', 'code', 'status')->orderBy('id', 'DESC')->get(); 
+        $countries = Country::select('countries.id', 'countries.name', 'countries.code', 'countries.status')->orderBy('countries.id', 'DESC')->paginate(10); 
 
         return $this->sendResponse($countries, 'Record has been added successfully.');
     }
@@ -64,7 +78,7 @@ class CountriesController extends BaseController
      */
     public function show($id)
     {
-        $country = Country::select('id', 'name', 'code', 'status')->where('id', $id)->first();
+        $country = Country::select('countries.id', 'countries.name', 'countries.code', 'countries.status')->where('countries.id', $id)->first();
 
         if ($country) {
             return $this->sendResponse($country, 'Record retrieved successfully.');
@@ -83,7 +97,7 @@ class CountriesController extends BaseController
      */
     public function edit($id)
     {
-        $country = Country::select('id', 'name', 'code', 'status')->where('id', $id)->first();
+        $country = Country::select('countries.id', 'countries.name', 'countries.code', 'countries.status')->where('countries.id', $id)->first();
 
         if ($country) {
             return $this->sendResponse($country, 'Record retrieved successfully.');
@@ -103,20 +117,21 @@ class CountriesController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $country = Country::select('id', 'name', 'code', 'status')->where('id', $id)->first();
+        $country = Country::select('countries.id', 'countries.name', 'countries.code', 'countries.status')->where('countries.id', $id)->first();
 
         if (!$country) {
-            return $this->sendError('Record is not available.');
+            return $this->sendError('Record with this id is not available.');
         }
 
         $details = $request->validate([
             'name' => 'required|string|unique:countries,name,' . $id . '|min:3|max:50',
-            'code' => 'required|string|unique:countries,code,' . $id . '|min:2|max:5'
+            'code' => 'required|string|unique:countries,code,' . $id . '|min:2|max:5',
+            'status' => 'required|numeric'
         ]);
 
         $country->update($details);
 
-        $countries = Country::select('id', 'name', 'code', 'status')->orderBy('id', 'DESC')->get(); 
+        $countries = Country::select('countries.id', 'countries.name', 'countries.code', 'countries.status')->orderBy('countries.id', 'DESC')->paginate(10); 
 
         return $this->sendResponse($countries, 'Record updated successfully.');
     }
@@ -131,15 +146,22 @@ class CountriesController extends BaseController
     {
         $country = Country::find($id);
 
-        $country->delete();
+        if ($country) {
 
-        $countries = Country::select('id', 'name', 'code')->get();
+            $country->delete();
 
-        return $this->sendResponse($countries, 'Record deleted successfully.');
+            $countries = Country::select('countries.id', 'countries.name', 'countries.code')->orderBy('countries.id', 'DESC')->paginate(10);
+    
+            return $this->sendResponse($countries, 'Record deleted successfully.');
+        }
+
+        else {
+            return $this->sendError('Record with this id is not available.');
+        }
     }
 
     public function showCountries() {
-        $countries = Country::select('id', 'name', 'code')->get();
+        $countries = Country::select('countries.id', 'countries.name', 'countries.code')->get();
 
         if ($countries) {
             return $this->sendResponse($countries, 'Records retrieved successfully.');

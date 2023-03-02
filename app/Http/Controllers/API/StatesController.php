@@ -16,10 +16,23 @@ class StatesController extends BaseController
      */
     public function index()
     {
-        $states = State::select('states.id', 'states.name', 'countries.name AS country', 'states.status')
+        $search = request('search');
+
+        if (!empty($search)) {
+            $states = State::select('states.id', 'states.name', 'countries.name AS country_name', 'states.status')
                     ->join('countries', 'states.country_id', 'countries.id')
+                    ->where('states.name', 'like', '%' . $search . '%')
+                    ->orWhere('countries.name', 'like', '%' . $search . '%')
                     ->orderBy('states.id', 'DESC')
-                    ->get();
+                    ->paginate(5);
+        }
+
+        else {
+            $states = State::select('states.id', 'states.name', 'countries.name AS country_name', 'states.status')
+            ->join('countries', 'states.country_id', 'countries.id')
+            ->orderBy('states.id', 'DESC')
+            ->get();
+        }        
 
         if ($states) {
             return $this->sendResponse($states, 'Records retrieved successfully.');
@@ -37,7 +50,11 @@ class StatesController extends BaseController
      */
     public function create()
     {
-        //
+        $countries = Country::select('countries.id', 'countries.name')->orderBy('countries.name', 'ASC')->get();
+
+        $data['countries'] = $countries;
+
+        return $this->sendResponse($data, 'Records retrieved successfully.');
     }
 
     /**
@@ -55,10 +72,10 @@ class StatesController extends BaseController
 
         State::create($details);
 
-        $states = State::select('states.id', 'states.name', 'countries.name AS country', 'states.status')
+        $states = State::select('states.id', 'states.name', 'countries.name AS country_name', 'states.status')
                     ->join('countries', 'states.country_id', 'countries.id')
                     ->orderBy('states.id', 'DESC')
-                    ->get();
+                    ->paginate(10);
 
         return $this->sendResponse($states, 'Record has been added successfully.');
     }
@@ -71,7 +88,7 @@ class StatesController extends BaseController
      */
     public function show($id)
     {
-        $state = State::select('states.id', 'states.name', 'countries.name AS country', 'states.status')
+        $state = State::select('states.id', 'states.name', 'countries.name AS country_name', 'states.status')
                     ->join('countries', 'states.country_id', 'countries.id')
                     ->where('states.id', $id)->first();
 
@@ -80,7 +97,7 @@ class StatesController extends BaseController
         }
 
         else {
-            return $this->sendError('Record is not available.');
+            return $this->sendError('Record with this id is not available.');
         }
     }
 
@@ -92,11 +109,11 @@ class StatesController extends BaseController
      */
     public function edit($id)
     {
-        $state = State::select('states.id', 'states.name', 'countries.name AS country', 'states.status')
+        $state = State::select('states.id', 'states.name', 'countries.name AS country_name', 'states.status')
                     ->join('countries', 'states.country_id', 'countries.id')
                     ->where('states.id', $id)->first();
 
-        $countries = Country::select('id', 'name', 'code', 'status')->orderBy('id', 'DESC')->get();
+        $countries = Country::select('countries.id', 'countries.name', 'countries.code', 'countries.status')->orderBy('countries.name', 'ASC')->get();
 
         $data['state'] = $state;
         $data['countries'] = $countries;
@@ -119,25 +136,24 @@ class StatesController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $state = State::select('id', 'name', 'country_id', 'status')->where('id', $id)->first();
+        $state = State::select('states.id', 'states.name', 'states.country_id', 'states.status')->where('states.id', $id)->first();
 
         if (!$state) {
             return $this->sendError('Record with this id is not available.');
         }
 
         $details = $request->validate([
-            'name' => 'required|string|unique:countries,name,' . $id . '|min:3|max:50',
+            'name'          => 'required|string|unique:countries,name,' . $id . '|min:3|max:50',
+            'country_id'    => 'required|numeric',
+            'status'        => 'required|numeric'
         ]);
-
-        $details['country_id'] = $request->country_id == '' ? $state->country_id : $request->country_id;
-        $details['status'] = $request->status == '' ? $state->status : $request->status;
 
         $state->update($details);
 
-        $states = State::select('states.id', 'states.name', 'countries.name AS country', 'states.status')
+        $states = State::select('states.id', 'states.name', 'countries.name AS country_name', 'states.status')
                     ->join('countries', 'states.country_id', 'countries.id')
                     ->orderBy('states.id', 'DESC')
-                    ->get();
+                    ->paginate(10);
 
         return $this->sendResponse($states, 'Record has been updated successfully.');
     }
@@ -152,33 +168,32 @@ class StatesController extends BaseController
     {
         $state = State::find($id);
 
-        $state->delete();
+        if ($state) {
 
-        $states = State::select('states.id', 'states.name', 'countries.name AS country', 'states.status')
-                    ->join('countries', 'states.country_id', 'countries.id')
-                    ->orderBy('states.id', 'DESC')
-                    ->get();
+            $state->delete();
 
-        return $this->sendResponse($states, 'Record deleted successfully.');
-    }
-
-    public function showStates($country_id) {
-        $states = State::select('id', 'name')->where('country_id', $country_id)->get();
-
-        if ($states) {
-            return response()->json([
-                'success' => true,
-                'data' => $states,
-                'message' => 'Records retrieved successfully!'
-            ]);
+            $states = State::select('states.id', 'states.name', 'countries.name AS country_name', 'states.status')
+                        ->join('countries', 'states.country_id', 'countries.id')
+                        ->orderBy('states.id', 'DESC')
+                        ->paginate(10);
+    
+            return $this->sendResponse($states, 'Record deleted successfully.');
         }
 
         else {
-            return response()->json([
-                'success' => false,
-                'data' => $states,
-                'message' => 'Records are not available!'
-            ]);
+            return $this->sendError('Record with this id is not available.');
+        }        
+    }
+
+    public function showStates($country_id) {
+        $states = State::select('states.id', 'states.name')->where('states.country_id', $country_id)->get();
+
+        if ($states) {
+            return $this->sendResponse($states, 'Records retrieved successfully.');
+        }
+
+        else {
+            return $this->sendError('Records are not available.');
         }
     }
 }
